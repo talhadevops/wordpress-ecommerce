@@ -39,13 +39,23 @@ define( 'WP_CONTENT_URL', WP_HOME . CONTENT_DIR );
 /**
  * DB settings
  */
-define( 'DB_NAME', env( 'DB_NAME' ) );
+/**define( 'DB_NAME', env( 'DB_NAME' ) );
 define( 'DB_USER', env( 'DB_USER' ) );
 define( 'DB_PASSWORD', env( 'DB_PASSWORD' ) );
 define( 'DB_HOST', env( 'DB_HOST', '127.0.0.1' ) );
 define( 'DB_CHARSET', 'utf8' );
 define( 'DB_COLLATE', '' );
 $table_prefix = env( 'DB_PREFIX', 'wp_' );
+*/
+/** Database settings pulled from ECS environment variables */
+define( 'DB_NAME', getenv('DB_NAME') ?: 'database-1' );
+define( 'DB_USER', getenv('DB_USER') ?: 'admin' );
+define( 'DB_PASSWORD', getenv('DB_PASSWORD') ?: 'ABc123456!' );
+define( 'DB_HOST', getenv('DB_HOST') ?: '127.0.0.1' );
+define( 'DB_CHARSET', 'utf8' );
+define( 'DB_COLLATE', '' );
+$table_prefix = getenv('DB_PREFIX') ?: 'wp_';
+
 
 /**
  * Authentication Unique Keys and Salts
