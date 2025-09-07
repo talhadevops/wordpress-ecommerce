@@ -1,18 +1,38 @@
-name: Docker Image CI
+# .github/workflows/build-and-push-public-ecr.yml
+
+name: Build and Push to Public ECR
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches: [main]  # or your branch
 
 jobs:
-
-  build:
-
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1  # Public ECR region
+
+    - name: Login to Public ECR
+      run: |
+        aws ecr-public get-login-password --region us-east-1 | \
+        docker login --username AWS --password-stdin public.ecr.aws
+
+    - name: Build and Push Docker Image to Public ECR
+      run: |
+        IMAGE_BASE=public.ecr.aws/i5u5r0e0/stagging
+        VERSION=${{ github.run_number }}  # auto-increment per workflow run
+
+        echo "Building and pushing $IMAGE_BASE:latest and $IMAGE_BASE:$VERSION"
+
+        docker build -t $IMAGE_BASE:latest -t $IMAGE_BASE:$VERSION .
+        docker push $IMAGE_BASE:latest
+        docker push $IMAGE_BASE:$VERSION
