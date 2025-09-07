@@ -48,10 +48,10 @@ define( 'DB_COLLATE', '' );
 $table_prefix = env( 'DB_PREFIX', 'wp_' );
 */
 /** Database settings pulled from ECS environment variables */
-define( 'DB_NAME', getenv('DB_NAME') ?: 'database-1' );
+define( 'DB_NAME', getenv('DB_NAME') ?: 'wordpress' );
 define( 'DB_USER', getenv('DB_USER') ?: 'admin' );
 define( 'DB_PASSWORD', getenv('DB_PASSWORD') ?: 'ABc123456!' );
-define( 'DB_HOST', getenv('DB_HOST') ?: '127.0.0.1' );
+define( 'DB_HOST', getenv('DB_HOST') ?: 'database-1.cqjeycmm6aiw.us-east-1.rds.amazonaws.com' );
 define( 'DB_CHARSET', 'utf8' );
 define( 'DB_COLLATE', '' );
 $table_prefix = getenv('DB_PREFIX') ?: 'wp_';
